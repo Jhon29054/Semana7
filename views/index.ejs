@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CRUD - STACK II MongoDB | JWCA</title>
+   
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
+    rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" 
+    crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  </head>
+  <body>
+
+    <nav class="navbar bg-primary navbar-expand-lg">
+      <div class="container">
+        <a class="navbar-brand link-warning fs-3" href="#">Stack</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarScroll">
+          <ul class="navbar-nav mx-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+            <li class="nav-item">
+              <a class="nav-link link-light" aria-current="page" href="#">Inicio</a>
+    
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link link-light dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Ventas
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Caja</a></li>
+                <li><a class="dropdown-item" href="#">Cliente</a></li>
+              </ul>
+            </li>
+    
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle link-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"> Compras </a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="/proveedores">Proveedor</a></li>
+                    <li><a class="dropdown-item" href="/insumos">Orden de compra</a></li>
+                </ul>
+            </li>
+            
+    
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle link-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Almacen
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Kardex</a></li>
+                <li><a class="dropdown-item" href="#">Producto</a></li>
+                <li><a class="dropdown-item" href="#">Categoria</a></li>
+              </ul>
+            </li>
+    
+          </ul>
+          <form class="d-flex" role="search">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-light" type="submit">Búsqueda</button>
+          </form>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container" style="margin-top: 50px;">
+      <br>
+      <br>
+      <a type="button" class="btnNuevo btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalClienteNuevo"><i class="fa-solid fa-square-plus"></i> Nuevo Cliente</a>
+
+
+      <!-- TABLA CLIENTES -->
+      <table id="tablaClientes" class="table mt-4 table-hover">
+        <thead class="table-info">
+          <tr>
+            <th style="display: none;">
+              ID
+            </th>
+            <th>NOMBRES</th>
+            <th>APELLIDOS</th>
+            <th>DIRECCION</th>
+            <th>ACCIONES</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% clientes.forEach((cliente) => { %> 
+          <tr>
+            <td style="display: none;">
+              <%= cliente._id %>
+            </td>
+            <td>
+              <%= cliente.nombre %>
+            </td>
+            <td>
+              <%= cliente.apellidos %>
+            </td>
+            <td>
+              <%= cliente.direccion %>
+            </td>
+            <td>
+              <a type="button" class="btnEditar btn btn-outline-primary fs-5 fa-solid fa-pen-to-square"></a>
+              <a class="btn btn-outline-danger fs-5 fa-solid fa-trash-can btnEliminar" data-id="<%= cliente._id %>"></a>
+            </td>
+          </tr>
+        <% }) %>
+        </tbody>
+      </table>
+    </div>
+
+<!-- Modal para crear y guardar nuevo cliente -->
+<div class="modal fade" id="modalClienteNuevo" tabindex="-1" aria-labelledby="modalClienteNuevo"  aria-hidden="true" data-bs-backdrop="static">
+
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="exampleModalLabel">Registro de nuevo cliente</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="/add" id="formularioNuevoCliente">
+          <div class="col-md-12">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input id="nombre" name="nombre" type="text" class="form-control" placeholder="Ingresar sus nombres completos" required>
+          </div>
+          <div class="col-md-12">
+            <label for="apellidos" class="form-label">Apellidos</label>
+            <input id="apellidos" name="apellidos" type="text" class="form-control" placeholder="Ingresar sus apellidos completos" required>
+          </div>
+          <div class="col-md-12">
+            <label for="direccion" class="form-label">Dirección</label>
+            <input id="direccion" name="direccion" type="text" class="form-control" placeholder="Example: Av. Urb.Calle, Mz, Lt." required>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalCliente" tabindex="-1" aria-labelledby="modalCliente"  aria-hidden="true" data-bs-backdrop="static">
+
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title" id="exampleModalLabel">Actualizar datos cliente</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="/edit">
+          <input name="id_editar" id="id_editar" type="text" hidden>
+          <div class="mb-12">
+            <label for="nombre_editar" class="col-form-label">Nombre</label>
+            <input id="nombre_editar" name="nombre_editar" type="text" class="form-control">
+          </div>
+          <div class="mb-12">
+            <label for="apellidos_editar" class="col-form-label">Apellidos</label>
+            <input id="apellidos_editar" name="apellidos_editar" type="text" class="form-control">
+          </div>
+          <div class="mb-12">
+            <label for="direccion_editar" class="col-form-label">Dirección</label>
+            <input id="direccion_editar" name="direccion_editar" type="text" class="form-control">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-primary">Actualizar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" 
+    crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.6/dist/sweetalert2.all.min.js"></script>    
+
+    <script src="js/code.js"></script>
+
+    <script src="js/action.js"></script>
+    
+  </body>
+</html>
